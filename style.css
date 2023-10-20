@@ -1,0 +1,47 @@
+
+.form-group {
+    margin: 40px;
+}
+button{
+    background-color: rgb(107, 6, 248);
+    margin-left: 60%;
+    padding: 5px;
+    cursor: pointer;
+}
+input{
+    width: 30%;
+    padding: 10px;
+    margin: 10px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+.list button{
+    padding: 5px;
+    margin: 10px;
+}
+
+i{
+    cursor:pointer;
+}

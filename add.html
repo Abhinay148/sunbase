@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Customer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="add">
+    <h3>Customer Details</h3>
+    <form id="customer-form">
+        <div class="form-group">
+            <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
+            <input type="text" id="last_name" name="last_name" placeholder="Last Name" required>
+        </div>
+        <div class="form-group">
+            <input type="text" id="street" name="street" placeholder="Street">
+            <input type="text" id="address" name="address" placeholder="Address">
+        </div>
+        <div class="form-group">
+            <input type="text" id="city" name="city" placeholder="City">
+            <input type="text" id="state" name="state" placeholder="State">
+        </div>
+        <div class="form-group">
+            <input type="email" id="email" name="email" placeholder="Email">
+            <input type="number" id="phone" name="phone" placeholder="Phone">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        const customerForm = document.getElementById('customer-form');
+        customerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const bearerToken = localStorage.getItem("bearerToken");
+            const formData = new FormData(customerForm);
+            const customerData = {};
+            formData.forEach((value, id) => {
+                customerData[id] = value;
+            });
+            console.log(customerData);
+
+            try {
+                const response = await fetch("http://localhost:3000/create-customer", {
+                    method: 'POST',
+                    body: JSON.stringify(customerData),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${bearerToken}` 
+                    },
+                });
+                
+
+                if (response.status === 201) {
+                    // Customer creation successful
+                    alert('Customer created successfully');
+                    window.location.href = "list.html";
+                } else if (response.status === 400) {
+                    // Handle validation errors or other failures
+                    const errorData = await response.json();
+                    alert('Customer creation failed: ' + errorData.error);
+                } else {
+                    // Handle other status codes as needed
+                    alert('An error occurred during customer creation');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred during customer creation');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="list">
+    <h2>Customer List</h2>
+    <a href="add.html"><button>Add Customer</button></a>
+    <table id="customerTable">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Street</th>
+                <th>State</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+    </table>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Retrieve the bearer token from local storage
+            const bearerToken = localStorage.getItem("bearerToken");
+
+            // Check if the token is available
+            if (bearerToken) {
+                const apiURL = "http://localhost:3000/customer-list";
+                // Use the bearer token in API requests
+                fetch(apiURL, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${bearerToken}`
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    const customerTable = document.getElementById("customerTable");
+
+                    data.forEach(customer => {
+                        const row = customerTable.insertRow(-1);
+                        const fields = ["first_name", "last_name", "street", "address", "city", "state", "email", "phone"];
+
+                        fields.forEach(field => {
+                        const cell = row.insertCell();
+                        cell.innerHTML = customer[field];
+                    });
+                    const actionCell = row.insertCell();
+                    actionCell.innerHTML = '<i class="fas fa-edit edit-customer"></i> <i class="fas fa-minus delete-customer"></i>';
+                    const editButton = actionCell.querySelector('.edit-customer');
+                    const deleteButton = actionCell.querySelector('.delete-customer');
+                    editButton.addEventListener("click", () => {
+                        fetch(`http://localhost:3000/update-customer/${customer.uuid}`, {
+                            method: "POST",
+                            headers: {
+                                "Authorization": `Bearer ${bearerToken}`,
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(/* Provide the data you want to update */)
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Edit request failed");
+                            }
+                            // Handle success
+                        })
+                        .then(data => {  
+                                alert("Edit request successful");    
+                            })
+                        .catch(error => {
+                            console.error("An error occurred while editing the customer:", error);
+                        });
+                    });
+
+                    deleteButton.addEventListener("click", () => {
+                        fetch(`http://localhost:3000/delete-customer/${customer.uuid}`, {
+                            method: "POST",
+                            headers: {
+                                "Authorization": `Bearer ${bearerToken}`
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Delete request failed");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("An error occurred while deleting the customer:", error);
+                        });
+                    });
+
+                    })
+                })
+                .catch(error => {
+                    console.error("An error occurred while fetching customer data:", error);
+                });
+            } else {
+                
+            }
+        });
+
+    </script>
+</body>
+</html>
