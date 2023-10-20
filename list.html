@@ -79,7 +79,7 @@
                             // Handle success
                         })
                         .then(data => {  
-                                alert("Edit request successful");    
+                                alert("Update request successful");    
                             })
                         .catch(error => {
                             console.error("An error occurred while editing the customer:", error);
@@ -98,6 +98,9 @@
                                 throw new Error("Delete request failed");
                             }
                         })
+                        .then(data => {  
+                                alert("Delete request successful");    
+                            })
                         .catch(error => {
                             console.error("An error occurred while deleting the customer:", error);
                         });
