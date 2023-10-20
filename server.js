@@ -90,7 +90,7 @@ app.post('/delete-customer/:uuid', async (req, res) => {
 });
 app.post('/update-customer/:uuid', async (req, res) => {
     try {
-        const customerUpdateURL = "https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=update";
+        const customerUpdateURL = `https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=update&uuid=${req.params.uuid}`;
 
         const response = await axios.post(customerUpdateURL, req.body, {
             headers: {
