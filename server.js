@@ -98,6 +98,7 @@ app.post('/update-customer/:uuid', async (req, res) => {
                 'Content-Type': 'application/json',
             },
         });
+        
 
         if (response.status === 200) {
             res.status(200).json({ message: 'Successfully updated' });
