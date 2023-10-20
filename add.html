@@ -25,9 +25,17 @@
             <input type="email" id="email" name="email" placeholder="Email">
             <input type="number" id="phone" name="phone" placeholder="Phone">
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" id="submitButton">Submit</button>
     </form>
     <script>
+        const urlParams=new URLSearchParams(window.location.search);
+        const receivedUuid=urlParams.get('uuid');
+        if(receivedUuid===null){
+            document.getElementById('submitButton').innerHTML = 'Submit';
+        }else{
+            document.getElementById('submitButton').innerHTML = 'Update';
+        }
+        console.log('uuid:',decodeURIComponent(receivedUuid));
         const customerForm = document.getElementById('customer-form');
         customerForm.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -37,7 +45,8 @@
             formData.forEach((value, id) => {
                 customerData[id] = value;
             });
-            console.log(customerData);
+
+            if(receivedUuid===null){
 
             try {
                 const response = await fetch("http://localhost:3000/create-customer", {
@@ -66,6 +75,31 @@
                 console.error('Error:', error);
                 alert('An error occurred during customer creation');
             }
+        }else{
+            document.getElementById('submitButton').value = 'Update';
+            fetch(`http://localhost:3000/update-customer/${receivedUuid}`, {
+                            method: "POST",
+                            headers: {
+                                "Authorization": `Bearer ${bearerToken}`,
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(customerData)
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Edit request failed");
+                            }
+                            
+                            // Handle success
+                        })
+                        .then(data => {  
+                            window.location.href = "list.html";
+                                alert("Update request successful");    
+                            })
+                        .catch(error => {
+                            console.error("An error occurred while editing the customer:", error);
+                        });
+        }
         });
     </script>
 </body>
