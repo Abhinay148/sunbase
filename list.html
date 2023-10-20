@@ -9,7 +9,7 @@
 </head>
 <body class="list">
     <h2>Customer List</h2>
-    <a href="add.html"><button>Add Customer</button></a>
+    <button onclick="navigateToAddPage(false,'')">Add Customer</button>
     <table id="customerTable">
         <thead>
             <tr>
@@ -27,6 +27,10 @@
     </table>
     
     <script>
+        function navigateToAddPage(isUpdate,uuid){
+            const url=`add.html${isUpdate ?`?uuid=${(uuid)}`:''}`;
+            window.location.href=url;
+        }
         document.addEventListener("DOMContentLoaded", function () {
             // Retrieve the bearer token from local storage
             const bearerToken = localStorage.getItem("bearerToken");
@@ -64,26 +68,7 @@
                     const editButton = actionCell.querySelector('.edit-customer');
                     const deleteButton = actionCell.querySelector('.delete-customer');
                     editButton.addEventListener("click", () => {
-                        fetch(`http://localhost:3000/update-customer/${customer.uuid}`, {
-                            method: "POST",
-                            headers: {
-                                "Authorization": `Bearer ${bearerToken}`,
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(/* Provide the data you want to update */)
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error("Edit request failed");
-                            }
-                            // Handle success
-                        })
-                        .then(data => {  
-                                alert("Update request successful");    
-                            })
-                        .catch(error => {
-                            console.error("An error occurred while editing the customer:", error);
-                        });
+                        navigateToAddPage(true, customer.uuid); 
                     });
 
                     deleteButton.addEventListener("click", () => {
@@ -99,8 +84,8 @@
                             }
                         })
                         .then(data => {  
-                                alert("Delete request successful");   
-                            location.reload();
+                                location.reload();
+                                alert("Delete request successful");    
                             })
                         .catch(error => {
                             console.error("An error occurred while deleting the customer:", error);
