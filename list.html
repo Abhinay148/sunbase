@@ -99,7 +99,8 @@
                             }
                         })
                         .then(data => {  
-                                alert("Delete request successful");    
+                                alert("Delete request successful");   
+                            location.reload();
                             })
                         .catch(error => {
                             console.error("An error occurred while deleting the customer:", error);
